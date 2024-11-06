@@ -1,9 +1,6 @@
 package store.domain.promotion;
 
-public class BuyOneGetOnePromotion implements Promotion {
-
-    private String promotionName;
-
+public class DefaultPromotion implements Promotion {
     @Override
     public String getName() {
         return "";
