@@ -6,6 +6,10 @@ import static store.constants.ViewMessage.*;
 
 public abstract class InputView {
 
+    public static void printWelcomeMessage() {
+        System.out.println(WELCOME);
+    }
+
     public static String requestProductToPurchase() {
         System.out.println(REQUEST_PRODUCT_TO_PURCHASE);
         return Console.readLine();
