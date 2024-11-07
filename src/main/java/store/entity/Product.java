@@ -1,7 +1,7 @@
 package store.entity;
 
 
-import store.domain.promotion.Promotion;
+import store.domain.Promotion;
 
 public class Product {
 
