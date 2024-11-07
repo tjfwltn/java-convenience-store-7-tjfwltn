@@ -1,6 +1,7 @@
 package store.util;
 
 import store.domain.Promotion;
+import store.domain.PromotionFactory;
 import store.entity.Product;
 
 import java.io.IOException;
@@ -18,29 +19,29 @@ public class FileParser {
     private static final int FIRST_LINE = 1;
     private static final String SEPARATOR = ",";
 
-//    public static List<Product> parseProducts() throws IOException {
-//        Files.lines(Path.of(PRODUCTS_FILE_PATH))
-//                .skip(FIRST_LINE)
-//                .forEach(line -> {
-//                    String[] parts = line.split(SEPARATOR);
-//                    String name =
-//                })
-//
-//    }
+    public static List<Product> parseProducts() throws IOException {
+        return Files.lines(Path.of(PRODUCTS_FILE_PATH))
+                .skip(FIRST_LINE)
+                .map(line -> line.split(SEPARATOR))
+                .map(fields -> new Product(
+                        fields[0],
+                        Integer.parseInt(fields[1]),
+                        Integer.parseInt(fields[2]),
+                        PromotionFactory.findMatchingPromotion(fields[3])
+                )).collect(Collectors.toList());
+    }
 
     public static List<Promotion> parsePromotions() throws IOException {
         return Files.lines(Path.of(PROMOTIONS_FILE_PATH))
                 .skip(FIRST_LINE)
-                .map(line -> {
-                    String[] promotionFields = line.split(SEPARATOR);
-                    String name = promotionFields[0];
-                    int buy = Integer.parseInt(promotionFields[1]);
-                    int get = Integer.parseInt(promotionFields[2]);
-                    LocalDate startDate = LocalDate.parse(promotionFields[3]);
-                    LocalDate endDate = LocalDate.parse(promotionFields[4]);
-
-                    return new Promotion(name, buy, get, startDate, endDate);
-                })
+                .map(line -> line.split(SEPARATOR))
+                .map(fields -> new Promotion(
+                        fields[0],
+                        Integer.parseInt(fields[1]),
+                        Integer.parseInt(fields[2]),
+                        LocalDate.parse(fields[3]),
+                        LocalDate.parse(fields[4])
+                ))
                 .collect(Collectors.toList());
     }
 }

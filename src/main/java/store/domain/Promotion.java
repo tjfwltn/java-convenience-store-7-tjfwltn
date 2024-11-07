@@ -6,17 +6,37 @@ import java.util.Objects;
 public class Promotion {
 
     private String name;
-    private int buy;
-    private int get;
+    private int purchaseAmount;
+    private int giftAmount;
     private LocalDate StartDate;
     private LocalDate EndDate;
 
-    public Promotion(String name, int buy, int get, LocalDate startDate, LocalDate endDate) {
+    public Promotion(String name, int purchaseAmount, int giftAmount, LocalDate startDate, LocalDate endDate) {
         this.name = name;
-        this.buy = buy;
-        this.get = get;
+        this.purchaseAmount = purchaseAmount;
+        this.giftAmount = giftAmount;
         StartDate = startDate;
         EndDate = endDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public int getGiftAmount() {
+        return giftAmount;
+    }
+
+    public LocalDate getStartDate() {
+        return StartDate;
+    }
+
+    public LocalDate getEndDate() {
+        return EndDate;
     }
 
     @Override
@@ -24,11 +44,16 @@ public class Promotion {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Promotion promotion = (Promotion) object;
-        return buy == promotion.buy && get == promotion.get && Objects.equals(name, promotion.name) && Objects.equals(StartDate, promotion.StartDate) && Objects.equals(EndDate, promotion.EndDate);
+        return purchaseAmount == promotion.purchaseAmount && giftAmount == promotion.giftAmount && Objects.equals(name, promotion.name) && Objects.equals(StartDate, promotion.StartDate) && Objects.equals(EndDate, promotion.EndDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, buy, get, StartDate, EndDate);
+        return Objects.hash(name, purchaseAmount, giftAmount, StartDate, EndDate);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }
