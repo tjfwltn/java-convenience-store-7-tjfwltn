@@ -1,7 +1,6 @@
 package store;
 
 import store.controller.ConvenienceController;
-import store.view.InputView;
 
 import java.io.IOException;
 

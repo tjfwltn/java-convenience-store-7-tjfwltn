@@ -10,9 +10,14 @@ public abstract class OutputView {
         System.out.println("현재 보유하고 있는 상품입니다.");
         lineBreaking();
         products.forEach(System.out::println);
+        lineBreaking();
     }
 
     private static void lineBreaking() {
         System.out.println();
+    }
+
+    public static void printErrorMessage(String message) {
+        System.out.println(message);
     }
 }
