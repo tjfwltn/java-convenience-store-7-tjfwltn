@@ -52,6 +52,9 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format("%s %s원 %s개 %s", name, FORMATTER.format(price), FORMATTER.format(quantity), promotion.getName());
+        if (quantity == 0) {
+            return String.format("- %s %s원 재고 없음", name, FORMATTER.format(price));
+        }
+        return String.format("- %s %s원 %s개 %s", name, FORMATTER.format(price), FORMATTER.format(quantity), promotion.getName());
     }
 }

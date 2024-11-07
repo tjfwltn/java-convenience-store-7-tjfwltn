@@ -8,6 +8,11 @@ public abstract class OutputView {
 
     public static void printProductList(List<Product> products) {
         System.out.println("현재 보유하고 있는 상품입니다.");
+        lineBreaking();
         products.forEach(System.out::println);
+    }
+
+    private static void lineBreaking() {
+        System.out.println();
     }
 }

@@ -9,7 +9,6 @@ public class Application {
     public static void main(String[] args) throws IOException {
         // TODO: 프로그램 구현
 
-        InputView.printWelcomeMessage();
         ConvenienceController convenienceController = new ConvenienceController();
         convenienceController.run();
     }
