@@ -3,6 +3,7 @@ package store.util;
 import org.junit.jupiter.api.Test;
 import store.constants.ErrorMessage;
 import store.entity.Product;
+import store.entity.PurchaseProduct;
 import store.entity.Stock;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ class ProductValidatorTest {
         // given
         List<Product> productList = FileParser.parseProducts();
         Stock stock = new Stock(productList);
-        String input = "[마운틴듀-10]";
+        List<PurchaseProduct> purchaseProductList = List.of(
+                new PurchaseProduct("마운틴듀", 21)
+        );
         // when & then
-        assertThatThrownBy(() -> ProductValidator.validatePurchaseProducts(stock, input))
+        assertThatThrownBy(() -> ProductValidator.validatePurchaseProducts(stock, purchaseProductList))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(NON_EXISTENT_PRODUCT.getMessage());
     }
@@ -30,9 +33,11 @@ class ProductValidatorTest {
         // given
         List<Product> productList = FileParser.parseProducts();
         Stock stock = new Stock(productList);
-        String input = "[콜라-21]";
+        List<PurchaseProduct> purchaseProductList = List.of(
+                new PurchaseProduct("콜라", 21)
+        );
         // when & then
-        assertThatThrownBy(() -> ProductValidator.validatePurchaseProducts(stock, input))
+        assertThatThrownBy(() -> ProductValidator.validatePurchaseProducts(stock, purchaseProductList))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(EXCEEDED_STOCK.getMessage());
     }
