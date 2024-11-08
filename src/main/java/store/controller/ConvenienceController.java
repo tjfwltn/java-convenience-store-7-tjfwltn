@@ -1,9 +1,6 @@
 package store.controller;
 
-import store.domain.DefaultPromotion;
-import store.domain.Promotion;
 import store.entity.Product;
-import store.entity.PromotionResult;
 import store.entity.PurchaseProduct;
 import store.entity.Stock;
 import store.service.PromotionService;
@@ -15,7 +12,8 @@ import store.view.InputView;
 import store.view.OutputView;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ConvenienceController {
@@ -35,9 +33,8 @@ public class ConvenienceController {
             ProductValidator.validatePurchaseProducts(stock, purchaseProducts);
             return purchaseProducts;
         });
-        PromotionResult promotionResult = promotionService.calculatePromotions(purchaseProductList, productList);
-        System.out.println("promotionResult.getAppliedPromotionMap() = " + promotionResult.getAppliedPromotionMap());
-        System.out.println("promotionResult.getDefaultPromotionMap() = " + promotionResult.getDefaultPromotionMap());
+        Map<Product, Integer> promotionMap = promotionService.calculatePromotions(purchaseProductList, productList);
+        System.out.println("promotionMap = " + promotionMap);
     }
 
     private <T> T retryOnError(Supplier<T> inputAction) {
