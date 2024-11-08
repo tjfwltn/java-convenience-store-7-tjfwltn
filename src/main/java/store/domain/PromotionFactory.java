@@ -3,10 +3,9 @@ package store.domain;
 import store.util.FileParser;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
-public class PromotionFactory {
+public abstract class PromotionFactory {
 
     private static final List<Promotion> promotionList;
 

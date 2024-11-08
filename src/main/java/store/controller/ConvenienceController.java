@@ -1,6 +1,7 @@
 package store.controller;
 
 import store.entity.Product;
+import store.entity.PromotionProductMap;
 import store.entity.PurchaseProduct;
 import store.entity.Stock;
 import store.service.PromotionService;
@@ -33,8 +34,9 @@ public class ConvenienceController {
             ProductValidator.validatePurchaseProducts(stock, purchaseProducts);
             return purchaseProducts;
         });
-        Map<Product, Integer> promotionMap = promotionService.calculatePromotions(purchaseProductList, productList);
-        System.out.println("promotionMap = " + promotionMap);
+        PromotionProductMap purchaseProductMap = promotionService.calculatePromotions(purchaseProductList, productList);
+
+
     }
 
     private <T> T retryOnError(Supplier<T> inputAction) {
