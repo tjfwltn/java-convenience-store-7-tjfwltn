@@ -14,7 +14,6 @@ import store.view.OutputView;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class ConvenienceController {
@@ -24,9 +23,8 @@ public class ConvenienceController {
     public void run() throws IOException {
         InputView.printWelcomeMessage();
         List<Product> productList = FileParser.parseProducts();
-        Stock stock = new Stock(productList);
-
         OutputView.printProductList(productList);
+        Stock stock = new Stock(productList);
         List<PurchaseProduct> purchaseProductList = retryOnError(() -> {
             String inputPurchaseProducts = InputView.requestProductToPurchase();
             InputValidator.validateProductFormat(inputPurchaseProducts);
@@ -35,7 +33,8 @@ public class ConvenienceController {
             return purchaseProducts;
         });
         PromotionProductMap purchaseProductMap = promotionService.calculatePromotions(purchaseProductList, productList);
-
+        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
+        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
 
     }
 

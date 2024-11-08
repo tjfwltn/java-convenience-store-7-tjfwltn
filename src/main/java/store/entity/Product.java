@@ -37,10 +37,6 @@ public class Product {
         return promotion;
     }
 
-    public String getPromotionName() {
-        return promotion.getName();
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

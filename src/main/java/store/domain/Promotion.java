@@ -1,5 +1,7 @@
 package store.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,15 +10,15 @@ public class Promotion {
     private String name;
     private int purchaseAmount;
     private int giftAmount;
-    private LocalDate StartDate;
-    private LocalDate EndDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Promotion(String name, int purchaseAmount, int giftAmount, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.purchaseAmount = purchaseAmount;
         this.giftAmount = giftAmount;
-        StartDate = startDate;
-        EndDate = endDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public String getName() {
@@ -32,11 +34,16 @@ public class Promotion {
     }
 
     public LocalDate getStartDate() {
-        return StartDate;
+        return startDate;
     }
 
     public LocalDate getEndDate() {
-        return EndDate;
+        return endDate;
+    }
+
+    public boolean isPromotionDay() {
+        LocalDate today = LocalDate.from(DateTimes.now());
+        return !today.isBefore(startDate) && !today.isAfter(endDate);
     }
 
     @Override
@@ -44,12 +51,12 @@ public class Promotion {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Promotion promotion = (Promotion) object;
-        return purchaseAmount == promotion.purchaseAmount && giftAmount == promotion.giftAmount && Objects.equals(name, promotion.name) && Objects.equals(StartDate, promotion.StartDate) && Objects.equals(EndDate, promotion.EndDate);
+        return purchaseAmount == promotion.purchaseAmount && giftAmount == promotion.giftAmount && Objects.equals(name, promotion.name) && Objects.equals(startDate, promotion.startDate) && Objects.equals(endDate, promotion.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, purchaseAmount, giftAmount, StartDate, EndDate);
+        return Objects.hash(name, purchaseAmount, giftAmount, startDate, endDate);
     }
 
     @Override
