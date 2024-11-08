@@ -22,6 +22,6 @@ public class PromotionFactory {
         return promotionList.stream()
                 .filter(promotion -> promotion.getName().equals(promotionName))
                 .findFirst()
-                .orElse(new Promotion("", 0, 0, LocalDate.MIN, LocalDate.MAX));
+                .orElse(new DefaultPromotion());
     }
 }

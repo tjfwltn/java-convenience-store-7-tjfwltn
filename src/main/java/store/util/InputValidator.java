@@ -16,5 +16,6 @@ public abstract class InputValidator {
         if (!matcher.matches()) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT.getMessage());
         }
+
     }
 }

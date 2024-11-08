@@ -33,6 +33,10 @@ public class Product {
         return quantity;
     }
 
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
     public String getPromotionName() {
         return promotion.getName();
     }
