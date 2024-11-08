@@ -1,12 +1,10 @@
 package store.util;
 
-import store.entity.Product;
-
-import java.util.List;
+import java.util.Map;
 
 public abstract class ProductConverter {
 
-//    public static List<Product> convertToProductList(String inputPurchaseProducts) {
-//        return
-//    }
+    public static Map<String, Integer> convertToProductList(String inputPurchaseProducts) {
+
+    }
 }

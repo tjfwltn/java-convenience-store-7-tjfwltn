@@ -1,20 +1,23 @@
 package store.controller;
 
 import store.entity.Product;
+import store.entity.PurchaseProduct;
 import store.entity.Stock;
+import store.service.PromotionService;
 import store.util.FileParser;
+import store.util.InputParser;
 import store.util.InputValidator;
-import store.util.ProductConverter;
 import store.util.ProductValidator;
 import store.view.InputView;
 import store.view.OutputView;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class ConvenienceController {
+
+    private final PromotionService promotionService = new PromotionService();
 
     public void run() throws IOException {
         InputView.printWelcomeMessage();
@@ -22,11 +25,14 @@ public class ConvenienceController {
         Stock stock = new Stock(productList);
 
         OutputView.printProductList(productList);
-//        retryOnError(() -> {
-//            String inputPurchaseProducts = InputView.requestProductToPurchase();
-//            InputValidator.validateProductFormat(inputPurchaseProducts);
-//            ProductValidator.validatePurchaseProducts(stock, inputPurchaseProducts);
-//        });
+        List<PurchaseProduct> purchaseProductList = retryOnError(() -> {
+            String inputPurchaseProducts = InputView.requestProductToPurchase();
+            InputValidator.validateProductFormat(inputPurchaseProducts);
+            List<PurchaseProduct> purchaseProducts = InputParser.parse(inputPurchaseProducts);
+            ProductValidator.validatePurchaseProducts(stock, purchaseProducts);
+            return purchaseProducts;
+        });
+
     }
 
     private <T> T retryOnError(Supplier<T> inputAction) {

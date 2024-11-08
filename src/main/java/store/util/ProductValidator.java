@@ -1,22 +1,22 @@
 package store.util;
 
+import store.entity.PurchaseProduct;
 import store.entity.Stock;
+
+import java.util.List;
 
 import static store.constants.ErrorMessage.EXCEEDED_STOCK;
 import static store.constants.ErrorMessage.NON_EXISTENT_PRODUCT;
 
 public abstract class ProductValidator {
 
-    public static void validatePurchaseProducts(Stock stock, String inputPurchaseProducts) {
-        String[] products = inputPurchaseProducts.split(",");
-        for (String productStr : products) {
-            String s = productStr.replaceAll("[\\[\\]]", "");
-            String[] parts = s.split("-");
-            String productName = parts[0];
-            int quantity = Integer.parseInt(parts[1]);
+    public static void validatePurchaseProducts(Stock stock, List<PurchaseProduct> purchaseProductList) {
+        for (PurchaseProduct purchaseProduct : purchaseProductList) {
+            String productName = purchaseProduct.getProductName();
+            int quantity = purchaseProduct.getQuantity();
 
             validateProductExistence(stock, productName);
-            validateStockAvailability(stock, productName,quantity);
+            validateStockAvailability(stock, productName, quantity);
         }
     }
 
