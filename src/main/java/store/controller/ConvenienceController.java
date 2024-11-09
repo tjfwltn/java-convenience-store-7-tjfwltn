@@ -1,6 +1,7 @@
 package store.controller;
 
 import camp.nextstep.edu.missionutils.Console;
+import store.domain.Promotion;
 import store.entity.Product;
 import store.entity.PromotionProductMap;
 import store.entity.PurchaseProduct;
@@ -37,26 +38,25 @@ public class ConvenienceController {
         PromotionProductMap purchaseProductMap = promotionService.calculatePromotions(purchaseProductList, productList);
         System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
         System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
+        processGiftOptionByPromotion(purchaseProductMap, purchaseProductList);
+        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
+        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
+    }
+
+    private void processGiftOptionByPromotion(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
         Map<Product, Integer> appliedPromotionMap = purchaseProductMap.getAppliedPromotionMap();
+        Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
         for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
             PurchaseProduct purchaseProduct = purchaseProductList.removeFirst();
             if (promotionService.canReceiveAdditionalProduct(entry.getKey(), purchaseProduct.getQuantity())) {
                 retryOnError(() -> {
                     String input = InputView.askAddGift(entry);
                     InputValidator.validateAnswerFormat(input);
-                    if (input.equals("N")) {
-                        return appliedPromotionMap;
-                    }
-                    if (input.equals("Y")) {
-                        appliedPromotionMap.put(entry.getKey(), appliedPromotionMap.getOrDefault(entry.getKey(), 0) + 3);
-
-                    }
+                    promotionService.calculateAndRemoveConflicts(entry, input, appliedPromotionMap, defaultPromotionMap);
                     return appliedPromotionMap;
                 });
             }
         }
-        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
-        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
     }
 
     private <T> T retryOnError(Supplier<T> inputAction) {
