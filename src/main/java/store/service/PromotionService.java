@@ -35,13 +35,14 @@ public class PromotionService {
 
     public boolean canReceiveAdditionalProduct(Product product, int purchaseQuantity) {
         Promotion promotion = product.getPromotion();
+        int stock = product.getQuantity();
         int purchaseAmount = promotion.getPurchaseAmount();
         int giftAmount = promotion.getGiftAmount();
         int totalAmount = purchaseAmount + giftAmount;
         if (!promotion.isPromotionDay()) {
             return false;
         }
-        if (purchaseQuantity < purchaseAmount) {
+        if (purchaseQuantity >= stock) {
             return false;
         }
         int remainder = purchaseQuantity % totalAmount;

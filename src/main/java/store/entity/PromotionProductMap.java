@@ -22,10 +22,8 @@ public class PromotionProductMap {
     }
 
     public int getTotalPrice() {
-        return Stream.concat(
-                appliedPromotionMap.values().stream(),
-                defaultPromotionMap.values().stream())
-                .mapToInt(Integer::intValue)
+        return Stream.concat(appliedPromotionMap.entrySet().stream(), defaultPromotionMap.entrySet().stream())
+                .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
     }
 }

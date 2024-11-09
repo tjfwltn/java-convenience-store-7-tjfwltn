@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public abstract class InputHandler {
 
-    public static <T> T retryOnError(Supplier<T> inputAction) {
+    public static  <T> T retryOnError(Supplier<T> inputAction) {
         while (true) {
             try {
                 return inputAction.get();
@@ -16,15 +16,15 @@ public abstract class InputHandler {
         }
     }
 
-    public static void processInputYes(String input, Runnable action) {
+    public static void processInputYes(String input, Runnable yesAction) {
         if (input.equals("Y")) {
-            action.run();
+            yesAction.run();
         }
     }
 
-    public static void processInputNo(String input, Runnable action) {
+    public static void processInputNo(String input, Runnable noAction) {
         if (input.equals("N")) {
-            action.run();
+            noAction.run();
         }
     }
 }
