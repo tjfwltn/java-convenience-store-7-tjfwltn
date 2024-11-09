@@ -48,16 +48,14 @@ public class PromotionService {
         return remainder >= purchaseAmount;
     }
 
-    public void calculateAndRemoveConflicts(Map.Entry<Product, Integer> entry, String input, Map<Product, Integer> appliedPromotionMap, Map<Product, Integer> defaultPromotionMap) {
-        if (input.equals("Y")) {
-            Promotion promotion = entry.getKey().getPromotion();
-            int giftAmount = promotion.getGiftAmount();
-            int purchaseAmount = promotion.getPurchaseAmount();
-            appliedPromotionMap.put(entry.getKey(),
-                    appliedPromotionMap.getOrDefault(entry.getKey(), 0) + giftAmount + purchaseAmount);
+    public void calculateAndRemoveConflicts(Map.Entry<Product, Integer> entry, Map<Product, Integer> appliedPromotionMap, Map<Product, Integer> defaultPromotionMap) {
+        Promotion promotion = entry.getKey().getPromotion();
+        int giftAmount = promotion.getGiftAmount();
+        int purchaseAmount = promotion.getPurchaseAmount();
+        appliedPromotionMap.put(entry.getKey(),
+                appliedPromotionMap.getOrDefault(entry.getKey(), 0) + giftAmount + purchaseAmount);
 
-            removeConflictingProducts(entry, defaultPromotionMap);
-        }
+        removeConflictingProducts(entry, defaultPromotionMap);
     }
 
     private static void removeConflictingProducts(Map.Entry<Product, Integer> entry, Map<Product, Integer> defaultPromotionMap) {

@@ -1,6 +1,7 @@
 package store.entity;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class PromotionProductMap {
 
@@ -18,5 +19,13 @@ public class PromotionProductMap {
 
     public Map<Product, Integer> getDefaultPromotionMap() {
         return defaultPromotionMap;
+    }
+
+    public int getTotalPrice() {
+        return Stream.concat(
+                appliedPromotionMap.values().stream(),
+                defaultPromotionMap.values().stream())
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 }

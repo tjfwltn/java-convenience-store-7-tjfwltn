@@ -1,11 +1,9 @@
 package store.util;
 
-import store.constants.ErrorMessage;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static store.constants.ErrorMessage.*;
+import static store.constants.ErrorMessage.INVALID_FORMAT;
 
 public abstract class InputValidator {
 
