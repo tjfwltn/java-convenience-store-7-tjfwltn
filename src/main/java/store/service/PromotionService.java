@@ -26,7 +26,9 @@ public class PromotionService {
             }
             Product defaultProduct = findDefaultProduct(productList, purchaseProduct);
             int defaultCount = purchaseQuantity - promotionCount;
-            defaultPromotionMap.put(defaultProduct, defaultCount);
+            if (defaultCount != 0) {
+                defaultPromotionMap.put(defaultProduct, defaultCount);
+            }
         });
         return new PromotionProductMap(appliedPromotionMap, defaultPromotionMap);
     }

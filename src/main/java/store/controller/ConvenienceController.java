@@ -36,11 +36,25 @@ public class ConvenienceController {
             return purchaseProducts;
         });
         PromotionProductMap purchaseProductMap = promotionService.calculatePromotions(purchaseProductList, productList);
-        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
-        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
         processGiftOptionByPromotion(purchaseProductMap, purchaseProductList);
-        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
-        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
+        processPartialPaymentDecision(purchaseProductMap);
+        System.out.println("할인 맵 = " + purchaseProductMap.getAppliedPromotionMap());
+        System.out.println("디폴트 맵 = " + purchaseProductMap.getDefaultPromotionMap());
+    }
+
+    private void processPartialPaymentDecision(PromotionProductMap purchaseProductMap) {
+        Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
+        if (!defaultPromotionMap.isEmpty()) {
+            for (Map.Entry<Product, Integer> entry : defaultPromotionMap.entrySet()) {
+                retryOnError(() -> {
+                    String input = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
+                    if (input.equals("N")) {
+                        defaultPromotionMap.remove(entry.getKey());
+                    }
+                    return purchaseProductMap;
+                });
+            }
+        }
     }
 
     private void processGiftOptionByPromotion(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
@@ -50,7 +64,7 @@ public class ConvenienceController {
             PurchaseProduct purchaseProduct = purchaseProductList.removeFirst();
             if (promotionService.canReceiveAdditionalProduct(entry.getKey(), purchaseProduct.getQuantity())) {
                 retryOnError(() -> {
-                    String input = InputView.askAddGift(entry);
+                    String input = InputView.askAddGift(entry.getKey(), entry.getKey().getPromotion().getGiftAmount());
                     InputValidator.validateAnswerFormat(input);
                     promotionService.calculateAndRemoveConflicts(entry, input, appliedPromotionMap, defaultPromotionMap);
                     return appliedPromotionMap;
