@@ -31,6 +31,21 @@ public class PromotionService {
         return new PromotionProductMap(appliedPromotionMap, defaultPromotionMap);
     }
 
+    public boolean canReceiveAdditionalProduct(Product product, int purchaseQuantity) {
+        Promotion promotion = product.getPromotion();
+        int purchaseAmount = promotion.getPurchaseAmount();
+        int giftAmount = promotion.getGiftAmount();
+        int totalAmount = purchaseAmount + giftAmount;
+        if (!promotion.isPromotionDay()) {
+            return false;
+        }
+        if (purchaseQuantity < purchaseAmount) {
+            return false;
+        }
+        int remainder = purchaseQuantity % totalAmount;
+        return remainder >= purchaseAmount;
+    }
+
     private Product findPromotionProduct(List<Product> productList, PurchaseProduct purchaseProduct) {
         return productList.stream()
                 .filter(product -> product.getName().equals(purchaseProduct.getProductName()))
