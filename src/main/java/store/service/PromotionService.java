@@ -6,15 +6,13 @@ import store.entity.Product;
 import store.entity.PromotionProductMap;
 import store.entity.PurchaseProduct;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PromotionService {
 
     public PromotionProductMap calculatePromotions(List<PurchaseProduct> purchaseProductList, List<Product> productList) {
-        Map<Product, Integer> appliedPromotionMap = new HashMap<>();
-        Map<Product, Integer> defaultPromotionMap = new HashMap<>();
+        Map<Product, Integer> appliedPromotionMap = new LinkedHashMap<>();
+        Map<Product, Integer> defaultPromotionMap = new LinkedHashMap<>();
 
         purchaseProductList.forEach(purchaseProduct -> {
             Product promotionProduct = findPromotionProduct(productList, purchaseProduct);
@@ -60,10 +58,12 @@ public class PromotionService {
     }
 
     private static void removeConflictingProducts(Map.Entry<Product, Integer> entry, Map<Product, Integer> defaultPromotionMap) {
-        for (Map.Entry<Product, Integer> defaultEntry : defaultPromotionMap.entrySet()) {
+        Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Product, Integer> defaultEntry = iterator.next();
             Product productInDefault = defaultEntry.getKey();
             if (productInDefault.getName().equals(entry.getKey().getName())) {
-                defaultPromotionMap.remove(productInDefault);
+                iterator.remove();
             }
         }
     }

@@ -1,15 +1,13 @@
 package store.controller;
 
-import store.entity.Product;
-import store.entity.PromotionProductMap;
-import store.entity.PurchaseProduct;
-import store.entity.Stock;
+import store.entity.*;
 import store.service.PromotionService;
 import store.util.*;
 import store.view.InputView;
 import store.view.OutputView;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +40,7 @@ public class ConvenienceController {
             }
             return 0;
         });
-        System.out.println("purchaseProductMap.getAppliedPromotionMap() = " + purchaseProductMap.getAppliedPromotionMap());
-        System.out.println("purchaseProductMap.getDefaultPromotionMap() = " + purchaseProductMap.getDefaultPromotionMap());
-        System.out.println("membershipDiscount = " + membershipDiscount);
+//        OutputView.printReceipt(purchaseProductMap, membershipDiscount);
     }
 
     private void processGiftOptionByPromotion(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
@@ -68,11 +64,13 @@ public class ConvenienceController {
     private void processPartialPaymentDecision(PromotionProductMap purchaseProductMap) {
         Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
         if (!defaultPromotionMap.isEmpty()) {
-            for (Map.Entry<Product, Integer> entry : defaultPromotionMap.entrySet()) {
+            Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Product, Integer> entry = iterator.next();
                 InputHandler.retryOnError(() -> {
                     String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
                     if (answer.equals("N")) {
-                        defaultPromotionMap.remove(entry.getKey());
+                        iterator.remove();
                     }
                     return purchaseProductMap;
                 });

@@ -20,4 +20,11 @@ public abstract class OutputView {
     public static void printErrorMessage(String message) {
         System.out.println(message);
     }
+
+//    public static void printReceipt(PromotionProductMap purchaseProductMap, int membershipDiscount) {
+//        System.out.println("==============W 편의점================");
+//        System.out.printf("%-10s %-10s %-10s%n", "상품명", "수량", "금액");
+//        System.out.printf("%-10s %-10s %-10s%n", "상품명", "수량", "금액");
+//        System.out.printf("%-10s %-10d %-10d%n", productName, quantity, price);
+//    }
 }
