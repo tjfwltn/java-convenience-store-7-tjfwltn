@@ -40,23 +40,28 @@ public class ConvenienceController {
             }
             return 0;
         });
-//        OutputView.printReceipt(purchaseProductMap, membershipDiscount);
+        Receipt receipt = new Receipt(purchaseProductList, purchaseProductMap, membershipDiscount);
+        OutputView.printReceipt(receipt);
+//        OutputView.printReceipt(purchaseProductList, purchaseProductMap, membershipDiscount);
     }
 
     private void processGiftOptionByPromotion(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
         Map<Product, Integer> appliedPromotionMap = purchaseProductMap.getAppliedPromotionMap();
         Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
+        Iterator<PurchaseProduct> iterator = purchaseProductList.iterator();
         for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
-            PurchaseProduct purchaseProduct = purchaseProductList.removeFirst();
-            if (promotionService.canReceiveAdditionalProduct(entry.getKey(), purchaseProduct.getQuantity())) {
-                InputHandler.retryOnError(() -> {
-                    String answer = InputView.askAddGift(entry.getKey(), entry.getKey().getPromotion().getGiftAmount());
-                    InputValidator.validateAnswerFormat(answer);
-                    if (answer.equals("Y")) {
-                        promotionService.calculateAndRemoveConflicts(entry, appliedPromotionMap, defaultPromotionMap);
-                    }
-                    return appliedPromotionMap;
-                });
+            if (iterator.hasNext()) {
+                PurchaseProduct purchaseProduct = iterator.next();
+                if (promotionService.canReceiveAdditionalProduct(entry.getKey(), purchaseProduct.getQuantity())) {
+                    InputHandler.retryOnError(() -> {
+                        String answer = InputView.askAddGift(entry.getKey(), entry.getKey().getPromotion().getGiftAmount());
+                        InputValidator.validateAnswerFormat(answer);
+                        if (answer.equals("Y")) {
+                            promotionService.calculateAndRemoveConflicts(entry, appliedPromotionMap, defaultPromotionMap);
+                        }
+                        return appliedPromotionMap;
+                    });
+                }
             }
         }
     }
@@ -77,5 +82,4 @@ public class ConvenienceController {
             }
         }
     }
-
 }

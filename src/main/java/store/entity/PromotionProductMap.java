@@ -1,6 +1,5 @@
 package store.entity;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -28,12 +27,14 @@ public class PromotionProductMap {
                 .sum();
     }
 
-    public Map<String, Integer> getTotalAmountMap() {
-        Map<String, Integer> totalAmountMap = new HashMap<>();
-        appliedPromotionMap.forEach((key, value) -> totalAmountMap.put(key.getName(), value));
-        defaultPromotionMap.forEach((key, value) ->
-                totalAmountMap.merge(key.getName(), value, Integer::sum)
-                );
-        return totalAmountMap;
+    public int getTotalAmount() {
+        return Stream.concat(appliedPromotionMap.entrySet().stream(), defaultPromotionMap.entrySet().stream())
+                .mapToInt(Map.Entry::getValue)
+                .sum();
     }
+
+    public int getPromotionDiscount() {
+
+    }
+
 }

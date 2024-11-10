@@ -16,6 +16,7 @@ public class PromotionService {
 
         purchaseProductList.forEach(purchaseProduct -> {
             Product promotionProduct = findPromotionProduct(productList, purchaseProduct);
+            purchaseProduct.setPrice(promotionProduct);
             int purchaseQuantity = purchaseProduct.getQuantity();
             int promotionCount = 0;
             if (promotionProduct.getPromotion().isPromotionDay()) {
