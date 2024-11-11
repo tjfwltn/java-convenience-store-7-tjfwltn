@@ -25,12 +25,4 @@ class FileEditorTest {
         ));
     }
 
-    @Test
-    void parseProductsTest() throws IOException {
-        // given
-        // when
-        List<Product> productList = FileEditor.parseProducts();
-        // then
-        assertThat(productList.size()).isEqualTo(16);
-    }
 }

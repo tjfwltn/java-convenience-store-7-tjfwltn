@@ -7,11 +7,11 @@ import java.util.Objects;
 
 public class Promotion {
 
-    private String name;
-    private int purchaseAmount;
-    private int giftAmount;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private final String name;
+    private final int purchaseAmount;
+    private final int giftAmount;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
     public Promotion(String name, int purchaseAmount, int giftAmount, LocalDate startDate, LocalDate endDate) {
         this.name = name;

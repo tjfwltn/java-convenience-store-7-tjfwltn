@@ -28,31 +28,12 @@ public class Receipt {
         }
         return giftMap;
     }
-    public Map<String, Integer> gettotalProductMap() {
-        Map<String, Integer> totalProductMap = new LinkedHashMap<>();
-        Map<Product, Integer> appliedPromotionMap = purchaseProductMap.appliedPromotionMap;
-        Map<Product, Integer> defaultPromotionMap = purchaseProductMap.defaultPromotionMap;
-        for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
-            String name = entry.getKey().getName();
-            Integer amount = entry.getValue();
-            totalProductMap.put(name, amount);
-        }
-        for (Map.Entry<Product, Integer> entry : defaultPromotionMap.entrySet()) {
-            String name = entry.getKey().getName();
-            Integer amount = entry.getValue();
-            if (totalProductMap.containsKey(name)) {
-                totalProductMap.compute(name, (k, integer) -> integer + amount);
-            }
-        }
-        return totalProductMap;
-    }
 
     @Override
     public String toString() {
         DecimalFormat df = new DecimalFormat("#,###");
         StringBuilder sb = new StringBuilder();
         Map<String, Integer> gifts = getGifts();
-        Map<String, Integer> productMap = gettotalProductMap();
         sb.append("==============W 편의점================\n");
         sb.append(String.format("%-16s %-8s %s%n", "상품명", "수량", "금액"));
 

@@ -55,6 +55,9 @@ public class Product {
         if (quantity == 0) {
             return String.format("- %s %s원 재고 없음", name, FORMATTER.format(price));
         }
+        if (promotion.getName().equals("null")) {
+            return String.format("- %s %s원 %s개", name, FORMATTER.format(price), FORMATTER.format(quantity));
+        }
         return String.format("- %s %s원 %s개 %s", name, FORMATTER.format(price), FORMATTER.format(quantity), promotion.getName());
     }
 }

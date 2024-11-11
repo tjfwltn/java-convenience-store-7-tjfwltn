@@ -15,9 +15,9 @@ public class PromotionService {
         Map<Product, Integer> defaultPromotionMap = new LinkedHashMap<>();
 
         purchaseProductList.forEach(purchaseProduct -> {
-            Product promotionProduct = findPromotionProduct(productList, purchaseProduct); // 재고 콜라
+            Product promotionProduct = findPromotionProduct(productList, purchaseProduct);
             purchaseProduct.setPrice(promotionProduct);
-            int purchaseQuantity = purchaseProduct.getQuantity(); // 콜라  11
+            int purchaseQuantity = purchaseProduct.getQuantity();
             int promotionCount = 0;
             if (promotionProduct.getPromotion().isPromotionDay()) {
                 promotionCount = calculatePromotionCount(promotionProduct, purchaseQuantity);

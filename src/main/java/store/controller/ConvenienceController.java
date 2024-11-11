@@ -1,5 +1,6 @@
 package store.controller;
 
+import store.constants.NonePromotionList;
 import store.domain.Stock;
 import store.entity.*;
 import store.service.PromotionService;
@@ -79,6 +80,10 @@ public class ConvenienceController {
             Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<Product, Integer> entry = iterator.next();
+                List<String> nonePromotionList = NonePromotionList.NONE_PROMOTION_LIST;
+                if (nonePromotionList.contains(entry.getKey().getName())) {
+                    continue;
+                }
                 InputHandler.retryOnError(() -> {
                     String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
                     if (answer.equals("N")) {
