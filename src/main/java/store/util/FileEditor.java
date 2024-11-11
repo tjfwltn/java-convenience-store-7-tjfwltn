@@ -1,6 +1,5 @@
 package store.util;
 
-import store.domain.DefaultPromotion;
 import store.domain.Promotion;
 import store.domain.PromotionFactory;
 import store.entity.Product;

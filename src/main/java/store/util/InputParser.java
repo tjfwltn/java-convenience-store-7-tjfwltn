@@ -1,6 +1,5 @@
 package store.util;
 
-import store.constants.ErrorMessage;
 import store.entity.PurchaseProduct;
 
 import java.util.ArrayList;
@@ -8,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static store.constants.ErrorMessage.*;
+import static store.constants.ErrorMessage.DEFAULT_INVALID_INPUT;
 
 public abstract class InputParser {
 

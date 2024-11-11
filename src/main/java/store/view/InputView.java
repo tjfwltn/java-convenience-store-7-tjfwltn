@@ -3,8 +3,6 @@ package store.view;
 import camp.nextstep.edu.missionutils.Console;
 import store.entity.Product;
 
-import java.util.Map;
-
 import static store.constants.ViewMessage.*;
 
 public abstract class InputView {
