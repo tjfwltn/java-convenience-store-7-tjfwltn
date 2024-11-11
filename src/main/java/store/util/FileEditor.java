@@ -62,29 +62,31 @@ public class FileEditor {
         Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
 
         List<String> updatedLines = dataLines.stream()
-                .map(line -> {
-                    String[] fields = line.split(SEPARATOR);
-                    String productName = fields[0];
-                    int quantity = Integer.parseInt(fields[2]);
-
-                    for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
-                        if (entry.getKey().getName().equals(productName) && entry.getKey().getPromotion().getName().equals(fields[3])) {
-                            quantity -= entry.getValue();
-                        }
-                    }
-                    for (Map.Entry<Product, Integer> entry : defaultPromotionMap.entrySet()) {
-                        if (entry.getKey().getName().equals(productName) && entry.getKey().getPromotion().getName().equals(fields[3])) {
-                            quantity -= entry.getValue();
-                        }
-                    }
-                    quantity = Math.max(quantity, 0);
-
-                    fields[2] = String.valueOf(quantity);
-                    return String.join(SEPARATOR, fields);
-                })
+                .map(line -> updateLine(line, appliedPromotionMap, defaultPromotionMap))
                 .collect(Collectors.toList());
 
         updatedLines.addFirst(header);
         Files.write(path, updatedLines);
+    }
+
+    private static String updateLine(String line, Map<Product, Integer> appliedPromotionMap, Map<Product, Integer> defaultPromotionMap) {
+        String[] fields = line.split(SEPARATOR);
+        String productName = fields[0];
+        int quantity = Integer.parseInt(fields[2]);
+
+        quantity -= getReductionQuantity(productName, fields[3], appliedPromotionMap);
+        quantity -= getReductionQuantity(productName, fields[3], defaultPromotionMap);
+        quantity = Math.max(quantity, 0);
+
+        fields[2] = String.valueOf(quantity);
+        return String.join(SEPARATOR, fields);
+    }
+
+    private static int getReductionQuantity(String productName, String promotionName, Map<Product, Integer> map) {
+        return map.entrySet().stream()
+                .filter(entry -> entry.getKey().getName().equals(productName)
+                && entry.getKey().getPromotion().getName().equals(promotionName))
+                .mapToInt(Map.Entry::getValue)
+                .sum();
     }
 }

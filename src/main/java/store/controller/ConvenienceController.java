@@ -1,6 +1,5 @@
 package store.controller;
 
-import store.domain.Promotion;
 import store.domain.Stock;
 import store.entity.Product;
 import store.entity.PromotionProductMap;
@@ -83,10 +82,6 @@ public class ConvenienceController {
         if (defaultPromotionMap.isEmpty()) {
             return;
         }
-        if (defaultPromotionMap.keySet().stream().anyMatch(product -> !product.getPromotion().isPromotionDay())) {
-            return; // 테스트 케이스 통과를 위한 꼼수.. ㅠㅠ 제가 작성한 로직으로는
-                    // "기간에_해당하지_않는_프로모션_적용"이 이 메서드로 인해 입력값 Y를 하나 더 받아야 해서 작성 ㅠㅠ
-        }
         Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Product, Integer> entry = iterator.next();
@@ -94,14 +89,16 @@ public class ConvenienceController {
             if (nonePromotionList.contains(entry.getKey().getName())) {
                 continue;
             }
-            InputHandler.retryOnError(() -> {
-                String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
-                if (answer.equals("N")) {
-                    purchaseProductList.removeIf(purchaseProduct -> purchaseProduct.getProductName().equals(entry.getKey().getName()));
-                    iterator.remove();
-                }
-                return purchaseProductMap;
-            });
+            if (entry.getKey().getPromotion().isPromotionDay()) {
+                InputHandler.retryOnError(() -> {
+                    String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
+                    if (answer.equals("N")) {
+                        purchaseProductList.removeIf(purchaseProduct -> purchaseProduct.getProductName().equals(entry.getKey().getName()));
+                        iterator.remove();
+                    }
+                    return purchaseProductMap;
+                });
+            }
         }
     }
 
