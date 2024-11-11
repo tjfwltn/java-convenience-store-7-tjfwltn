@@ -5,7 +5,7 @@ import java.util.Objects;
 public class PurchaseProduct {
 
     private final String productName;
-    private final int quantity;
+    private int quantity;
     private int price;
 
     public PurchaseProduct(String productName, int quantity) {
@@ -15,6 +15,10 @@ public class PurchaseProduct {
 
     public String getProductName() {
         return productName;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getQuantity() {

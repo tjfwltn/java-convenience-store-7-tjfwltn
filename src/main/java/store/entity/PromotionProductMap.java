@@ -33,8 +33,21 @@ public class PromotionProductMap {
                 .sum();
     }
 
-    public int getPromotionDiscount() {
-
+    public int getGiftDiscount() {
+        int giftDiscount = 0;
+        for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
+            int price = entry.getKey().getPrice();
+            int purchaseAmount = entry.getKey().getPromotion().getPurchaseAmount();
+            int giftAmount = entry.getKey().getPromotion().getGiftAmount();
+            int giftsCount = entry.getValue() / (purchaseAmount + giftAmount);
+            giftDiscount += giftsCount * price;
+        }
+        return giftDiscount;
     }
 
+    public int getDefaultPrice() {
+        return defaultPromotionMap.entrySet().stream()
+                .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
+    }
 }

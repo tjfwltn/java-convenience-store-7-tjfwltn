@@ -72,7 +72,6 @@ public class PromotionService {
     private Product findPromotionProduct(List<Product> productList, PurchaseProduct purchaseProduct) {
         return productList.stream()
                 .filter(product -> product.getName().equals(purchaseProduct.getProductName()))
-                .filter(product -> !product.getPromotion().equals(new DefaultPromotion()))
                 .findFirst()
                 .get();
     }

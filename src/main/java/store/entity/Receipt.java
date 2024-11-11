@@ -46,9 +46,13 @@ public class Receipt {
             sb.append(String.format("%-16s %-8d%n", entry.getKey(), entry.getValue()));
         }
         sb.append("====================================\n");
-        sb.append(String.format("%-16s %-8d %s%n",
+        sb.append(String.format("%-16s %-8d  %s%n",
                         "총구매액", purchaseProductMap.getTotalAmount(), df.format(purchaseProductMap.getTotalPrice())));
-        sb.append(String.format("%-24s  %s%n", "행사할인", ))
+        int giftDiscount = purchaseProductMap.getGiftDiscount();
+        sb.append(String.format("%-24s   -%s%n", "행사할인", df.format(giftDiscount)));
+        sb.append(String.format("%-24s  -%s%n", "멤버십할인", df.format(membershipDiscount)));
+
         return sb.toString();
     }
+
 }

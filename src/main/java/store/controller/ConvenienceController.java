@@ -1,5 +1,6 @@
 package store.controller;
 
+import store.domain.DefaultPromotion;
 import store.entity.*;
 import store.service.PromotionService;
 import store.util.*;
@@ -34,9 +35,9 @@ public class ConvenienceController {
         int membershipDiscount = InputHandler.retryOnError(() -> {
             String answer = InputView.askApplyMemberShip();
             InputValidator.validateAnswerFormat(answer);
-            int totalPrice = purchaseProductMap.getTotalPrice();
+            int defaultPrice = purchaseProductMap.getDefaultPrice();
             if (answer.equals("Y")) {
-                return MembershipDiscountCalculator.calculate(totalPrice);
+                return MembershipDiscountCalculator.calculate(defaultPrice);
             }
             return 0;
         });
@@ -57,6 +58,8 @@ public class ConvenienceController {
                         String answer = InputView.askAddGift(entry.getKey(), entry.getKey().getPromotion().getGiftAmount());
                         InputValidator.validateAnswerFormat(answer);
                         if (answer.equals("Y")) {
+                            int quantity = purchaseProduct.getQuantity();
+                            purchaseProduct.setQuantity(quantity + 1);
                             promotionService.calculateAndRemoveConflicts(entry, appliedPromotionMap, defaultPromotionMap);
                         }
                         return appliedPromotionMap;
@@ -72,13 +75,15 @@ public class ConvenienceController {
             Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<Product, Integer> entry = iterator.next();
-                InputHandler.retryOnError(() -> {
-                    String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
-                    if (answer.equals("N")) {
-                        iterator.remove();
-                    }
-                    return purchaseProductMap;
-                });
+                if (!entry.getKey().getPromotion().equals(new DefaultPromotion())) {
+                    InputHandler.retryOnError(() -> {
+                        String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
+                        if (answer.equals("N")) {
+                            iterator.remove();
+                        }
+                        return purchaseProductMap;
+                    });
+                }
             }
         }
     }
