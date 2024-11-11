@@ -28,29 +28,49 @@ public class Receipt {
         }
         return giftMap;
     }
+    public Map<String, Integer> gettotalProductMap() {
+        Map<String, Integer> totalProductMap = new LinkedHashMap<>();
+        Map<Product, Integer> appliedPromotionMap = purchaseProductMap.appliedPromotionMap;
+        Map<Product, Integer> defaultPromotionMap = purchaseProductMap.defaultPromotionMap;
+        for (Map.Entry<Product, Integer> entry : appliedPromotionMap.entrySet()) {
+            String name = entry.getKey().getName();
+            Integer amount = entry.getValue();
+            totalProductMap.put(name, amount);
+        }
+        for (Map.Entry<Product, Integer> entry : defaultPromotionMap.entrySet()) {
+            String name = entry.getKey().getName();
+            Integer amount = entry.getValue();
+            if (totalProductMap.containsKey(name)) {
+                totalProductMap.compute(name, (k, integer) -> integer + amount);
+            }
+        }
+        return totalProductMap;
+    }
 
     @Override
     public String toString() {
         DecimalFormat df = new DecimalFormat("#,###");
         StringBuilder sb = new StringBuilder();
         Map<String, Integer> gifts = getGifts();
+        Map<String, Integer> productMap = gettotalProductMap();
         sb.append("==============W 편의점================\n");
         sb.append(String.format("%-16s %-8s %s%n", "상품명", "수량", "금액"));
 
-        for (PurchaseProduct product : purchaseProductList) {
+        purchaseProductList.forEach(product ->
             sb.append(String.format("%-16s %-8d %s%n",
-                    product.getProductName(), product.getQuantity(), df.format(product.getPrice() * product.getQuantity())));
-        }
+                    product.getProductName(), product.getQuantity(), df.format(product.getPrice() * product.getQuantity())))
+        );
         sb.append("=============증\t\t정===============\n");
-        for (Map.Entry<String, Integer> entry : gifts.entrySet()) {
-            sb.append(String.format("%-16s %-8d%n", entry.getKey(), entry.getValue()));
-        }
+        gifts.forEach((key, value) ->
+            sb.append(String.format("%-16s %-8d%n", key, value)));
         sb.append("====================================\n");
-        sb.append(String.format("%-16s %-8d  %s%n",
-                        "총구매액", purchaseProductMap.getTotalAmount(), df.format(purchaseProductMap.getTotalPrice())));
+        sb.append(String.format("%-16s %-8d   %s%n",
+                "총구매액", purchaseProductMap.getTotalAmount(), df.format(purchaseProductMap.getTotalPrice())));
         int giftDiscount = purchaseProductMap.getGiftDiscount();
         sb.append(String.format("%-24s   -%s%n", "행사할인", df.format(giftDiscount)));
-        sb.append(String.format("%-24s  -%s%n", "멤버십할인", df.format(membershipDiscount)));
+        sb.append(String.format("%-24s   -%s%n", "멤버십할인", df.format(membershipDiscount)));
+        int finalAmount = purchaseProductMap.getTotalPrice() - giftDiscount - membershipDiscount;
+        sb.append(String.format("%-24s    %s%n", "내실돈", df.format(finalAmount)));
 
         return sb.toString();
     }

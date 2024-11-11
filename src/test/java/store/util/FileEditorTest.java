@@ -10,13 +10,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FileParserTest {
+class FileEditorTest {
 
     @Test
     void parsePromotionsTest() throws IOException {
         // given
         // when
-        List<Promotion> promotionList = FileParser.parsePromotions();
+        List<Promotion> promotionList = FileEditor.parsePromotions();
         // then
         assertThat(promotionList).isEqualTo(List.of(
                 new Promotion("탄산2+1", 2, 1, LocalDate.parse("2024-01-01"), LocalDate.parse("2024-12-31")),
@@ -29,7 +29,7 @@ class FileParserTest {
     void parseProductsTest() throws IOException {
         // given
         // when
-        List<Product> productList = FileParser.parseProducts();
+        List<Product> productList = FileEditor.parseProducts();
         // then
         assertThat(productList.size()).isEqualTo(16);
     }

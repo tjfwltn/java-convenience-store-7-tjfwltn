@@ -1,6 +1,6 @@
 package store.controller;
 
-import store.domain.DefaultPromotion;
+import store.domain.Stock;
 import store.entity.*;
 import store.service.PromotionService;
 import store.util.*;
@@ -18,7 +18,7 @@ public class ConvenienceController {
 
     public void run() throws IOException {
         InputView.printWelcomeMessage();
-        List<Product> productList = FileParser.parseProducts();
+        List<Product> productList = FileEditor.parseProducts();
         OutputView.printProductList(productList);
         Stock stock = new Stock(productList);
         List<PurchaseProduct> purchaseProductList = InputHandler.retryOnError(() -> {
@@ -27,11 +27,11 @@ public class ConvenienceController {
             List<PurchaseProduct> purchaseProducts = InputParser.parse(inputPurchaseProducts);
             ProductValidator.validatePurchaseProducts(stock, purchaseProducts);
             return purchaseProducts;
-        }); // 사이다, 9
+        });
 
         PromotionProductMap purchaseProductMap = promotionService.calculatePromotions(purchaseProductList, productList);
         processGiftOptionByPromotion(purchaseProductMap, purchaseProductList);
-        processPartialPaymentDecision(purchaseProductMap);
+        processPartialPaymentDecision(purchaseProductMap, purchaseProductList);
         int membershipDiscount = InputHandler.retryOnError(() -> {
             String answer = InputView.askApplyMemberShip();
             InputValidator.validateAnswerFormat(answer);
@@ -43,7 +43,11 @@ public class ConvenienceController {
         });
         Receipt receipt = new Receipt(purchaseProductList, purchaseProductMap, membershipDiscount);
         OutputView.printReceipt(receipt);
-//        OutputView.printReceipt(purchaseProductList, purchaseProductMap, membershipDiscount);
+        String input = InputView.askForAnotherProduct();
+        if (input.equals("Y")) {
+            FileEditor.saveStock(purchaseProductMap);
+            run();
+        }
     }
 
     private void processGiftOptionByPromotion(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
@@ -69,21 +73,20 @@ public class ConvenienceController {
         }
     }
 
-    private void processPartialPaymentDecision(PromotionProductMap purchaseProductMap) {
+    private void processPartialPaymentDecision(PromotionProductMap purchaseProductMap, List<PurchaseProduct> purchaseProductList) {
         Map<Product, Integer> defaultPromotionMap = purchaseProductMap.getDefaultPromotionMap();
         if (!defaultPromotionMap.isEmpty()) {
             Iterator<Map.Entry<Product, Integer>> iterator = defaultPromotionMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<Product, Integer> entry = iterator.next();
-                if (!entry.getKey().getPromotion().equals(new DefaultPromotion())) {
-                    InputHandler.retryOnError(() -> {
-                        String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
-                        if (answer.equals("N")) {
-                            iterator.remove();
-                        }
-                        return purchaseProductMap;
-                    });
-                }
+                InputHandler.retryOnError(() -> {
+                    String answer = InputView.askDefaultPromotionPurchase(entry.getKey(), entry.getValue());
+                    if (answer.equals("N")) {
+                        purchaseProductList.removeIf(purchaseProduct -> purchaseProduct.getProductName().equals(entry.getKey().getName()));
+                        iterator.remove();
+                    }
+                    return purchaseProductMap;
+                });
             }
         }
     }

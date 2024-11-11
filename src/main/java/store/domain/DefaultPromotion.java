@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class DefaultPromotion extends Promotion {
 
     public DefaultPromotion() {
-        super("", 0, 0, LocalDate.MIN, LocalDate.MIN);
+        super("null", 0, 0, LocalDate.MIN, LocalDate.MIN);
     }
 
     @Override

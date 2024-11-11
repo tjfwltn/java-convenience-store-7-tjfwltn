@@ -1,6 +1,6 @@
 package store.domain;
 
-import store.util.FileParser;
+import store.util.FileEditor;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ public abstract class PromotionFactory {
 
     static {
         try {
-            promotionList = FileParser.parsePromotions();
+            promotionList = FileEditor.parsePromotions();
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }

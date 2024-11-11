@@ -1,10 +1,9 @@
 package store.util;
 
 import org.junit.jupiter.api.Test;
-import store.constants.ErrorMessage;
 import store.entity.Product;
 import store.entity.PurchaseProduct;
-import store.entity.Stock;
+import store.domain.Stock;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +16,7 @@ class ProductValidatorTest {
     @Test
     void validateProductExistenceTest() throws IOException {
         // given
-        List<Product> productList = FileParser.parseProducts();
+        List<Product> productList = FileEditor.parseProducts();
         Stock stock = new Stock(productList);
         List<PurchaseProduct> purchaseProductList = List.of(
                 new PurchaseProduct("마운틴듀", 21)
@@ -31,7 +30,7 @@ class ProductValidatorTest {
     @Test
     void validateStockAvailabilityTest() throws IOException {
         // given
-        List<Product> productList = FileParser.parseProducts();
+        List<Product> productList = FileEditor.parseProducts();
         Stock stock = new Stock(productList);
         List<PurchaseProduct> purchaseProductList = List.of(
                 new PurchaseProduct("콜라", 21)

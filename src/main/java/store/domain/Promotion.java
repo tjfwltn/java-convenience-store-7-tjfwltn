@@ -33,14 +33,6 @@ public class Promotion {
         return giftAmount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
     public boolean isPromotionDay() {
         LocalDate today = LocalDate.from(DateTimes.now());
         return !today.isBefore(startDate) && !today.isAfter(endDate);
