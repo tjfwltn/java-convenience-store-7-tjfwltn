@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class Receipt {
 
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###");
     private final List<PurchaseProduct> purchaseProductList;
     private final PromotionProductMap purchaseProductMap;
     private final int membershipDiscount;
@@ -31,29 +32,39 @@ public class Receipt {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#,###");
         StringBuilder sb = new StringBuilder();
         Map<String, Integer> gifts = getGifts();
         sb.append("==============W 편의점================\n");
-        sb.append(String.format("%-16s %-8s %s%n", "상품명", "수량", "금액"));
-
-        purchaseProductList.forEach(product ->
-            sb.append(String.format("%-16s %-8d %s%n",
-                    product.getProductName(), product.getQuantity(), df.format(product.getPrice() * product.getQuantity())))
-        );
+        appendProductList(sb);
         sb.append("=============증\t\t정===============\n");
-        gifts.forEach((key, value) ->
-            sb.append(String.format("%-16s %-8d%n", key, value)));
+        appendGifts(gifts, sb);
         sb.append("====================================\n");
-        sb.append(String.format("%-16s %-8d   %s%n",
-                "총구매액", purchaseProductMap.getTotalAmount(), df.format(purchaseProductMap.getTotalPrice())));
-        int giftDiscount = purchaseProductMap.getGiftDiscount();
-        sb.append(String.format("%-24s   -%s%n", "행사할인", df.format(giftDiscount)));
-        sb.append(String.format("%-24s   -%s%n", "멤버십할인", df.format(membershipDiscount)));
-        int finalAmount = purchaseProductMap.getTotalPrice() - giftDiscount - membershipDiscount;
-        sb.append(String.format("%-24s    %s%n", "내실돈", df.format(finalAmount)));
+        appendFooter(sb);
 
         return sb.toString();
+    }
+
+    private void appendProductList(StringBuilder sb) {
+        sb.append(String.format("%-16s %-8s %s%n", "상품명", "수량", "금액"));
+        purchaseProductList.forEach(product ->
+                sb.append(String.format("%-16s %-8d %s%n",
+                        product.getProductName(), product.getQuantity(), DECIMAL_FORMAT.format(product.getPrice() * product.getQuantity())))
+        );
+    }
+
+    private static void appendGifts(Map<String, Integer> gifts, StringBuilder sb) {
+        gifts.forEach((key, value) ->
+            sb.append(String.format("%-16s %-8d%n", key, value)));
+    }
+
+    private void appendFooter(StringBuilder sb) {
+        sb.append(String.format("%-16s %-8d   %s%n",
+                "총구매액", purchaseProductMap.getTotalAmount(), DECIMAL_FORMAT.format(purchaseProductMap.getTotalPrice())));
+        int giftDiscount = purchaseProductMap.getGiftDiscount();
+        sb.append(String.format("%-24s   -%s%n", "행사할인", DECIMAL_FORMAT.format(giftDiscount)));
+        sb.append(String.format("%-24s   -%s%n", "멤버십할인", DECIMAL_FORMAT.format(membershipDiscount)));
+        int finalAmount = purchaseProductMap.getTotalPrice() - giftDiscount - membershipDiscount;
+        sb.append(String.format("%-24s    %s%n", "내실돈", DECIMAL_FORMAT.format(finalAmount)));
     }
 
 }
