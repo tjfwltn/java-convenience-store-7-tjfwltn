@@ -1,6 +1,6 @@
 package store.controller;
 
-import store.domain.Stock;
+import store.entity.Stock;
 import store.entity.Product;
 import store.entity.PromotionProductMap;
 import store.entity.PurchaseProduct;

@@ -3,7 +3,7 @@ package store.util;
 import org.junit.jupiter.api.Test;
 import store.entity.Product;
 import store.entity.PurchaseProduct;
-import store.domain.Stock;
+import store.entity.Stock;
 
 import java.io.IOException;
 import java.util.List;

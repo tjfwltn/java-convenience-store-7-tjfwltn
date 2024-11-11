@@ -1,7 +1,7 @@
 package store.util;
 
 import store.entity.PurchaseProduct;
-import store.domain.Stock;
+import store.entity.Stock;
 
 import java.util.List;
 

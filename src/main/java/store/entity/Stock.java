@@ -1,6 +1,4 @@
-package store.domain;
-
-import store.entity.Product;
+package store.entity;
 
 import java.util.List;
 import java.util.Map;
